@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import json
 import logging
@@ -23,6 +25,7 @@ from st2client.commands.noop import NoopCommand
 from st2client.formatters import table
 from st2client.models.keyvalue import KeyValuePair
 from st2client.utils.date import format_isodate_for_user_timezone
+import six
 
 LOG = logging.getLogger(__name__)
 
@@ -254,8 +257,8 @@ class KeyValuePairDeleteByPrefixCommand(resource.ResourceCommand):
         deleted = self.run(args, **kwargs)
         key_ids = [key_pair.id for key_pair in deleted]
 
-        print('Deleted %s keys' % (len(deleted)))
-        print('Deleted key ids: %s' % (', '.join(key_ids)))
+        print(('Deleted %s keys' % (len(deleted))))
+        print(('Deleted key ids: %s' % (', '.join(key_ids))))
 
 
 class KeyValuePairLoadCommand(resource.ResourceCommand):
@@ -303,7 +306,7 @@ class KeyValuePairLoadCommand(resource.ResourceCommand):
 
             # if the value is not a string, convert it to JSON
             # all keys in the datastore must strings
-            if not isinstance(value, basestring):
+            if not isinstance(value, six.string_types):
                 if args.convert:
                     value = json.dumps(value)
                 else:

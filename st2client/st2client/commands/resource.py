@@ -13,12 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import abc
 import six
 import json
 import logging
-import httplib
+import six.moves.http_client
 from functools import wraps
 import traceback
 
@@ -139,8 +141,8 @@ class ResourceCommand(commands.Command):
         return '%s-id' % resource_name.replace(' ', '-')
 
     def print_not_found(self, name):
-        print ('%s "%s" is not found.\n' %
-               (self.resource.get_display_name(), name))
+        print(('%s "%s" is not found.\n' %
+               (self.resource.get_display_name(), name)))
 
     def get_resource(self, name_or_id, **kwargs):
         pk_argument_name = self.pk_argument_name
@@ -165,7 +167,7 @@ class ResourceCommand(commands.Command):
             # Hack for "Unauthorized" exceptions, we do want to propagate those
             response = getattr(e, 'response', None)
             status_code = getattr(response, 'status_code', None)
-            if status_code and status_code == httplib.UNAUTHORIZED:
+            if status_code and status_code == six.moves.http_client.UNAUTHORIZED:
                 raise e
 
             instance = None
@@ -373,7 +375,7 @@ class ResourceCreateCommand(ResourceCommand):
                               attributes=['all'], json=args.json, yaml=args.yaml)
         except Exception as e:
             message = e.message or str(e)
-            print('ERROR: %s' % (message))
+            print(('ERROR: %s' % (message)))
             raise OperationFailureException(message)
 
 
@@ -420,7 +422,7 @@ class ResourceUpdateCommand(ResourceCommand):
             self.print_output(instance, table.PropertyValueTable,
                               attributes=['all'], json=args.json, yaml=args.yaml)
         except Exception as e:
-            print('ERROR: %s' % e.message)
+            print(('ERROR: %s' % e.message))
             raise OperationFailureException(e.message)
 
 
@@ -540,7 +542,7 @@ class ResourceDeleteCommand(ResourceCommand):
 
         try:
             self.run(args, **kwargs)
-            print('Resource with id "%s" has been successfully deleted.' % (resource_id))
+            print(('Resource with id "%s" has been successfully deleted.' % (resource_id)))
         except ResourceNotFoundError:
             self.print_not_found(resource_id)
             raise OperationFailureException('Resource %s not found.' % resource_id)

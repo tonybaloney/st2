@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import ast
 import copy
@@ -36,6 +38,7 @@ from st2client.utils import jsutil
 from st2client.utils.date import format_isodate_for_user_timezone
 from st2client.utils.date import parse as parse_isotime
 from st2client.utils.color import format_status
+from six.moves import range
 
 LOG = logging.getLogger(__name__)
 
@@ -438,7 +441,7 @@ class ActionRunCommandMixin(object):
 
         if args.tail:
             # Start tailing new execution
-            print('Tailing execution "%s"' % (str(execution.id)))
+            print(('Tailing execution "%s"' % (str(execution.id))))
             execution_manager = self.manager
             stream_manager = self.app.client.managers['Stream']
             ActionExecutionTailCommand.tail_execution(execution=execution,
@@ -737,7 +740,7 @@ class ActionRunCommandMixin(object):
                     parameters, required, optional, _ = self._get_params_types(runner,
                                                                                action)
                     print('')
-                    print(textwrap.fill(action.description))
+                    print((textwrap.fill(action.description)))
                     print('')
                     if required:
                         required = self._sort_parameters(parameters=parameters,
@@ -754,11 +757,11 @@ class ActionRunCommandMixin(object):
                         [self._print_param(name, parameters.get(name))
                             for name in optional]
                 except resource.ResourceNotFoundError:
-                    print(('Action "%s" is not found. ' % args.ref_or_id) +
-                          'Use "st2 action list" to see the list of available actions.')
+                    print((('Action "%s" is not found. ' % args.ref_or_id) +
+                          'Use "st2 action list" to see the list of available actions.'))
                 except Exception as e:
-                    print('ERROR: Unable to print help for action "%s". %s' %
-                          (args.ref_or_id, e))
+                    print(('ERROR: Unable to print help for action "%s". %s' %
+                          (args.ref_or_id, e)))
             else:
                 self.parser.print_help()
             return True
@@ -772,17 +775,17 @@ class ActionRunCommandMixin(object):
         wrapper = textwrap.TextWrapper(width=78)
         wrapper.initial_indent = ' ' * 4
         wrapper.subsequent_indent = wrapper.initial_indent
-        print(wrapper.fill(name))
+        print((wrapper.fill(name)))
         wrapper.initial_indent = ' ' * 8
         wrapper.subsequent_indent = wrapper.initial_indent
         if 'description' in schema and schema['description']:
-            print(wrapper.fill(schema['description']))
+            print((wrapper.fill(schema['description'])))
         if 'type' in schema and schema['type']:
-            print(wrapper.fill('Type: %s' % schema['type']))
+            print((wrapper.fill('Type: %s' % schema['type'])))
         if 'enum' in schema and schema['enum']:
-            print(wrapper.fill('Enum: %s' % ', '.join(schema['enum'])))
+            print((wrapper.fill('Enum: %s' % ', '.join(schema['enum']))))
         if 'default' in schema and schema['default'] is not None:
-            print(wrapper.fill('Default: %s' % schema['default']))
+            print((wrapper.fill('Default: %s' % schema['default'])))
         print('')
 
     @staticmethod
@@ -1453,7 +1456,7 @@ class ActionExecutionTailCommand(resource.ResourceCommand):
             output = execution_manager.get_output(execution_id=execution_id,
                                                   output_type=output_type)
             print(output)
-            print('Execution %s has completed (status=%s).' % (execution_id, execution.status))
+            print(('Execution %s has completed (status=%s).' % (execution_id, execution.status)))
             return
 
         events = ['st2.execution__update', 'st2.execution.output__create']
@@ -1472,14 +1475,14 @@ class ActionExecutionTailCommand(resource.ResourceCommand):
 
                 if is_child_execution:
                     if status == LIVEACTION_STATUS_RUNNING:
-                        print('Child execution (task=%s) %s has started.' % (task_name,
-                                                                             task_execution_id))
+                        print(('Child execution (task=%s) %s has started.' % (task_name,
+                                                                             task_execution_id)))
                         print('')
                         continue
                     elif status in LIVEACTION_COMPLETED_STATES:
                         print('')
-                        print('Child execution (task=%s) %s has finished (status=%s).' % (task_name,
-                              task_execution_id, status))
+                        print(('Child execution (task=%s) %s has finished (status=%s).' % (task_name,
+                              task_execution_id, status)))
                         continue
                     else:
                         # We don't care about other child events so we simply skip then
@@ -1488,7 +1491,7 @@ class ActionExecutionTailCommand(resource.ResourceCommand):
                     if status in LIVEACTION_COMPLETED_STATES:
                         # Bail out once parent execution has finished
                         print('')
-                        print('Execution %s has completed (status=%s).' % (execution_id, status))
+                        print(('Execution %s has completed (status=%s).' % (execution_id, status)))
                         break
                     else:
                         # We don't care about other execution events

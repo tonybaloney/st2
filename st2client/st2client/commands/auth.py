@@ -13,10 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import getpass
 import json
 import logging
-import httplib
+import six.moves.http_client
 
 import requests
 from six.moves.configparser import ConfigParser
@@ -71,7 +73,7 @@ class TokenCreateCommand(resource.ResourceCommand):
         instance = self.run(args, **kwargs)
 
         if args.only_token:
-            print(instance.token)
+            print((instance.token))
         else:
             self.print_output(instance, table.PropertyValueTable,
                               attributes=self.display_attributes, json=args.json, yaml=args.yaml)
@@ -146,13 +148,13 @@ class LoginCommand(resource.ResourceCommand):
         try:
             self.run(args, **kwargs)
         except Exception as e:
-            print('Failed to log in as %s: %s' % (args.username, str(e)))
+            print(('Failed to log in as %s: %s' % (args.username, str(e))))
             if self.app.client.debug:
                 raise
 
             return
 
-        print('Logged in as %s' % (args.username))
+        print(('Logged in as %s' % (args.username)))
 
         if not args.write_password:
             # Note: Client can't depend and import from common so we need to hard-code this
@@ -160,9 +162,9 @@ class LoginCommand(resource.ResourceCommand):
             token_expire_hours = 24
 
             print('')
-            print('Note: You didn\'t use --write-password option so the password hasn\'t been '
+            print(('Note: You didn\'t use --write-password option so the password hasn\'t been '
                   'stored in the client config and you will need to login again in %s hours when '
-                  'the auth token expires.' % (token_expire_hours))
+                  'the auth token expires.' % (token_expire_hours)))
             print('As an alternative, you can run st2 login command with the "--write-password" '
                   'flag, but keep it mind this will cause it to store the password in plain-text '
                   'in the client config file (~/.st2/config).')
@@ -190,7 +192,7 @@ class WhoamiCommand(resource.ResourceCommand):
         except Exception as e:
             response = getattr(e, 'response', None)
             status_code = getattr(response, 'status_code', None)
-            is_unathorized_error = (status_code == httplib.UNAUTHORIZED)
+            is_unathorized_error = (status_code == six.moves.http_client.UNAUTHORIZED)
 
             if response and is_unathorized_error:
                 print('Not authenticated')
@@ -202,18 +204,18 @@ class WhoamiCommand(resource.ResourceCommand):
 
             return
 
-        print('Currently logged in as "%s".' % (user_info['username']))
+        print(('Currently logged in as "%s".' % (user_info['username'])))
         print('')
-        print('Authentication method: %s' % (user_info['authentication']['method']))
+        print(('Authentication method: %s' % (user_info['authentication']['method'])))
 
         if user_info['authentication']['method'] == 'authentication token':
-            print('Authentication token expire time: %s' %
-                  (user_info['authentication']['token_expire']))
+            print(('Authentication token expire time: %s' %
+                  (user_info['authentication']['token_expire'])))
 
         print('')
         print('RBAC:')
-        print(' - Enabled: %s' % (user_info['rbac']['enabled']))
-        print(' - Roles: %s' % (', '.join(user_info['rbac']['roles'])))
+        print((' - Enabled: %s' % (user_info['rbac']['enabled'])))
+        print((' - Roles: %s' % (', '.join(user_info['rbac']['roles']))))
 
 
 class ApiKeyBranch(resource.ResourceBranch):
@@ -311,10 +313,10 @@ class ApiKeyCreateCommand(resource.ResourceCommand):
                 raise Exception('Server did not create instance.')
         except Exception as e:
             message = e.message or str(e)
-            print('ERROR: %s' % (message))
+            print(('ERROR: %s' % (message)))
             raise OperationFailureException(message)
         if args.only_key:
-            print(instance.key)
+            print((instance.key))
         else:
             self.print_output(instance, table.PropertyValueTable,
                               attributes=['all'], json=args.json, yaml=args.yaml)
@@ -340,7 +342,7 @@ class ApiKeyLoadCommand(resource.ResourceCommand):
     def run(self, args, **kwargs):
         resources = resource.load_meta_file(args.file)
         if not resources:
-            print('No %s found in %s.' % (self.resource.get_display_name().lower(), args.file))
+            print(('No %s found in %s.' % (self.resource.get_display_name().lower(), args.file)))
             return None
         if not isinstance(resources, list):
             resources = [resources]

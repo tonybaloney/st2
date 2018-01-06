@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import print_function
 from st2client.models import core
 from st2client.models.action_alias import ActionAlias
 from st2client.models.action_alias import ActionAliasMatch
@@ -126,6 +128,6 @@ class ActionAliasExecuteCommand(resource.ResourceCommand):
 
     def run_and_print(self, args, **kwargs):
         execution = self.run(args, **kwargs)
-        print("Matching Action-alias: '%s'" % execution.actionalias['ref'])
-        print("To get the results, execute:\n st2 execution get %s" %
-              (execution.execution['id']))
+        print(("Matching Action-alias: '%s'" % execution.actionalias['ref']))
+        print(("To get the results, execute:\n st2 execution get %s" %
+              (execution.execution['id'])))

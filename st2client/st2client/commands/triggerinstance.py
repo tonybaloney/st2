@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import print_function
 from st2client.commands import resource
 from st2client.formatters import table
 from st2client.models import TriggerInstance
@@ -42,7 +44,7 @@ class TriggerInstanceResendCommand(resource.ResourceCommand):
     def run_and_print(self, args, **kwargs):
         ret = self.run(args, **kwargs)
         if 'message' in ret:
-            print(ret['message'])
+            print((ret['message']))
 
 
 class TriggerInstanceBranch(resource.ResourceBranch):

@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import sys
 
 import editor
@@ -81,7 +83,7 @@ class PackResourceCommand(resource.ResourceCommand):
             print("No matching items found")
         except Exception as e:
             message = e.message or str(e)
-            print('ERROR: %s' % (message))
+            print(('ERROR: %s' % (message)))
             raise OperationFailureException(message)
 
 
@@ -227,10 +229,10 @@ class PackInstallCommand(PackAsyncCommand):
 
     @staticmethod
     def _print_pack_content(pack_name, pack_content):
-        print('\nFor the "%s" %s, the following content will be registered:\n'
-              % (', '.join(pack_name), 'pack' if len(pack_name) == 1 else 'packs'))
+        print(('\nFor the "%s" %s, the following content will be registered:\n'
+              % (', '.join(pack_name), 'pack' if len(pack_name) == 1 else 'packs')))
         for item, count in pack_content.items():
-            print('%-10s|  %s' % (item, count))
+            print(('%-10s|  %s' % (item, count)))
         print('\nInstallation may take a while for packs with many items.')
 
     @add_auth_token_to_kwargs_from_cli
@@ -381,7 +383,7 @@ class PackConfigCommand(resource.ResourceCommand):
                 modified = editor.edit(contents=contents)
                 config = yaml.safe_load(modified)
             except editor.EditorError as e:
-                print(str(e))
+                print((str(e)))
 
         message = '---\nDo you want me to save it?'
         save_dialog = interactive.Question(message, {'default': 'y'})
@@ -407,5 +409,5 @@ class PackConfigCommand(resource.ResourceCommand):
                 raise
 
             message = e.message or str(e)
-            print('ERROR: %s' % (message))
+            print(('ERROR: %s' % (message)))
             raise OperationFailureException(message)

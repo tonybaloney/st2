@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import json
 import logging
 
@@ -141,4 +143,4 @@ class InquiryRespondCommand(resource.ResourceCommand):
 
     def run_and_print(self, args, **kwargs):
         instance = self.run(args, **kwargs)
-        print("\nResponse accepted for inquiry %s." % instance.id)
+        print(("\nResponse accepted for inquiry %s." % instance.id))

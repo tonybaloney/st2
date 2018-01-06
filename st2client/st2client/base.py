@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import pwd
 import json
@@ -111,7 +113,7 @@ class BaseCLIApp(object):
 
         # We skip automatic authentication for some commands such as auth
         try:
-            command_class_name = args.func.im_class.__name__
+            command_class_name = args.func.__self__.__class__.__name__
         except Exception:
             command_class_name = None
 
@@ -248,7 +250,7 @@ class BaseCLIApp(object):
             return None
 
         # Safety check for too permissive permissions
-        file_st_mode = oct(os.stat(cached_token_path).st_mode & 0777)
+        file_st_mode = oct(os.stat(cached_token_path).st_mode & 0o777)
         others_st_mode = int(file_st_mode[-1])
 
         if others_st_mode >= 4:
@@ -324,7 +326,7 @@ class BaseCLIApp(object):
         # open + chmod are two operations which means that during a short time frame (between
         # open and chmod) when file can potentially be read by other users if the default
         # permissions used during create allow that.
-        fd = os.open(cached_token_path, os.O_WRONLY | os.O_CREAT, 0600)
+        fd = os.open(cached_token_path, os.O_WRONLY | os.O_CREAT, 0o600)
         with os.fdopen(fd, 'w') as fp:
             fp.write(data)
 
@@ -350,10 +352,10 @@ class BaseCLIApp(object):
         config = self._parse_config_file(args=args)
 
         for section, options in six.iteritems(config):
-            print('[%s]' % (section))
+            print(('[%s]' % (section)))
 
             for name, value in six.iteritems(options):
-                print('%s = %s' % (name, value))
+                print(('%s = %s' % (name, value)))
 
     def _print_debug_info(self, args):
         # Print client settings
@@ -372,17 +374,17 @@ class BaseCLIApp(object):
 
         print('CLI settings:')
         print('----------------')
-        print('Config file path: %s' % (config_file_path))
+        print(('Config file path: %s' % (config_file_path)))
         print('Client settings:')
         print('----------------')
-        print('ST2_BASE_URL: %s' % (client.endpoints['base']))
-        print('ST2_AUTH_URL: %s' % (client.endpoints['auth']))
-        print('ST2_API_URL: %s' % (client.endpoints['api']))
-        print('ST2_STREAM_URL: %s' % (client.endpoints['stream']))
-        print('ST2_AUTH_TOKEN: %s' % (os.environ.get('ST2_AUTH_TOKEN')))
+        print(('ST2_BASE_URL: %s' % (client.endpoints['base'])))
+        print(('ST2_AUTH_URL: %s' % (client.endpoints['auth'])))
+        print(('ST2_API_URL: %s' % (client.endpoints['api'])))
+        print(('ST2_STREAM_URL: %s' % (client.endpoints['stream'])))
+        print(('ST2_AUTH_TOKEN: %s' % (os.environ.get('ST2_AUTH_TOKEN'))))
         print('')
         print('Proxy settings:')
         print('---------------')
-        print('HTTP_PROXY: %s' % (os.environ.get('HTTP_PROXY', '')))
-        print('HTTPS_PROXY: %s' % (os.environ.get('HTTPS_PROXY', '')))
+        print(('HTTP_PROXY: %s' % (os.environ.get('HTTP_PROXY', ''))))
+        print(('HTTPS_PROXY: %s' % (os.environ.get('HTTPS_PROXY', ''))))
         print('')

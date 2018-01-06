@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import absolute_import
+from __future__ import print_function
 import re
 
 import jsonschema
@@ -22,6 +24,7 @@ from prompt_toolkit import token
 from prompt_toolkit import validation
 
 from st2client.exceptions.operations import OperationFailureException
+from six.moves import range
 
 
 POSITIVE_BOOLEAN = {'1', 'y', 'yes', 'true'}
@@ -415,7 +418,7 @@ class InteractiveForm(object):
                 try:
                     result[field] = self._read_field(field)
                 except ReaderNotImplemented as e:
-                    print('%s. Skipping...' % str(e))
+                    print(('%s. Skipping...' % str(e)))
         except DialogInterrupted:
             if self.reraise:
                 raise

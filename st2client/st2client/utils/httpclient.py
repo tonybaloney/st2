@@ -15,6 +15,7 @@
 
 from __future__ import absolute_import
 
+from __future__ import print_function
 import json
 import logging
 from pipes import quote as pquote
@@ -131,11 +132,11 @@ class HTTPClient(object):
         if self.debug:
             # Log cURL request line
             curl_line = self._get_curl_line_for_request(request=response.request)
-            print("# -------- begin %d request ----------" % id(self))
+            print(("# -------- begin %d request ----------" % id(self)))
             print(curl_line)
-            print("# -------- begin %d response ----------" % (id(self)))
-            print(response.text)
-            print("# -------- end %d response ------------" % (id(self)))
+            print(("# -------- begin %d response ----------" % (id(self))))
+            print((response.text))
+            print(("# -------- end %d response ------------" % (id(self))))
             print('')
 
         return response
